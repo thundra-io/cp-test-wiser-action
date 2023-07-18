@@ -165,10 +165,7 @@ function ping() {
         try {
             // 👇️ const response: Response
             const response = yield (0, node_fetch_1.default)('http://cp-tracing-api-internal-lab.us-west-2.elasticbeanstalk.com/ping', {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json'
-                }
+                method: 'GET'
             });
             if (!response.ok) {
                 throw new Error(`Error! status: ${response.status}`);
@@ -180,7 +177,7 @@ function ping() {
         }
         catch (error) {
             if (error instanceof Error) {
-                logger.error(`error message: ${error.message}`);
+                logger.error(`error message: ${JSON.stringify(error)}`);
                 return error.message;
             }
             else {

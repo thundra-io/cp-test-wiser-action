@@ -64,10 +64,7 @@ async function ping() {
     const response = await fetch(
       'http://cp-tracing-api-internal-lab.us-west-2.elasticbeanstalk.com/ping',
       {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json'
-        }
+        method: 'GET'
       }
     )
 
@@ -83,7 +80,7 @@ async function ping() {
     return result
   } catch (error) {
     if (error instanceof Error) {
-      logger.error(`error message: ${error.message}`)
+      logger.error(`error message: ${JSON.stringify(error)}`)
       return error.message
     } else {
       logger.error(`unexpected error: ${error}`)
