@@ -5,10 +5,13 @@ import {Octokit} from '@octokit/action'
 async function run(): Promise<void> {
   try {
     logger.info(`Initializing ...`)
-    logger.info(`Token ... ${core.getInput('github-token')}`)
+    const token = `${core.getInput('github-token')}`
+    logger.info(`Token New ... ${token}`)
     const eventName = github.context.eventName
 
-    const octokit = new Octokit()
+    const octokit = new Octokit({
+      auth: token
+    })
     let base: string | undefined
     let head: string | undefined
 

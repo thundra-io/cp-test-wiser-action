@@ -106,9 +106,12 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             logger.info(`Initializing ...`);
-            logger.info(`Token ... ${core.getInput('github-token')}`);
+            const token = `${core.getInput('github-token')}`;
+            logger.info(`Token New ... ${token}`);
             const eventName = github.context.eventName;
-            const octokit = new action_1.Octokit();
+            const octokit = new action_1.Octokit({
+                auth: token
+            });
             let base;
             let head;
             if (eventName === 'pull_request') {
