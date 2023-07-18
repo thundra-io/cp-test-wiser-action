@@ -64,7 +64,10 @@ async function ping() {
     const response = await fetch(
       'http://cp-tracing-api-internal-lab.us-west-2.elasticbeanstalk.com/ping',
       {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+          Accept: 'application/json'
+        }
       }
     )
 
