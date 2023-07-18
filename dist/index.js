@@ -171,8 +171,8 @@ function ping() {
                 throw new Error(`Error! status: ${response.status}`);
             }
             // 👇️ const result: GetUsersResponse
-            const result = yield response.json();
-            logger.info(`result is:${JSON.stringify(result)}`);
+            const result = yield response.text();
+            logger.info(`result is:${result}`);
             return result;
         }
         catch (error) {

@@ -73,9 +73,9 @@ async function ping() {
     }
 
     // 👇️ const result: GetUsersResponse
-    const result = await response.json()
+    const result = await response.text()
 
-    logger.info(`result is:${JSON.stringify(result)}`)
+    logger.info(`result is:${result}`)
 
     return result
   } catch (error) {
