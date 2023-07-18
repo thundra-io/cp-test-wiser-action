@@ -80,7 +80,9 @@ async function ping() {
     return result
   } catch (error) {
     if (error instanceof Error) {
-      logger.error(`error : ${JSON.stringify(error)}`)
+      logger.error(`error message : ${error.message}`)
+      logger.error(`error stack : ${error.stack}`)
+      logger.error(`error  : ${error}`)
       return error.message
     } else {
       logger.error(`unexpected error: ${error}`)
