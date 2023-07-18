@@ -164,11 +164,8 @@ function ping() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // 👇️ const response: Response
-            const response = yield (0, node_fetch_1.default)('https://reqres.in/api/users', {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json'
-                }
+            const response = yield (0, node_fetch_1.default)('http://cp-tracing-api-internal-lab.us-west-2.elasticbeanstalk.com/ping', {
+                method: 'GET'
             });
             if (!response.ok) {
                 throw new Error(`Error! status: ${response.status}`);

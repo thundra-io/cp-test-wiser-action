@@ -61,12 +61,12 @@ async function run(): Promise<void> {
 async function ping() {
   try {
     // 👇️ const response: Response
-    const response = await fetch('https://reqres.in/api/users', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json'
+    const response = await fetch(
+      'http://cp-tracing-api-internal-lab.us-west-2.elasticbeanstalk.com/ping',
+      {
+        method: 'GET'
       }
-    })
+    )
 
     if (!response.ok) {
       throw new Error(`Error! status: ${response.status}`)
