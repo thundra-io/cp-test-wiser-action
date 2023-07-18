@@ -105,10 +105,7 @@ function run() {
     var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            logger.info(`Initializing ...`);
-            const token = `${core.getInput('github-token')}`;
-            logger.info(`Token New ... ${token}`);
-            process.env['GITHUB_TOKEN'] = token;
+            process.env['GITHUB_TOKEN'] = `${core.getInput('github-token')}`;
             const eventName = github.context.eventName;
             const octokit = new action_1.Octokit();
             let base;

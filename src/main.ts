@@ -4,10 +4,7 @@ import * as github from '@actions/github'
 import {Octokit} from '@octokit/action'
 async function run(): Promise<void> {
   try {
-    logger.info(`Initializing ...`)
-    const token = `${core.getInput('github-token')}`
-    logger.info(`Token New ... ${token}`)
-    process.env['GITHUB_TOKEN'] = token
+    process.env['GITHUB_TOKEN'] = `${core.getInput('github-token')}`
 
     const eventName = github.context.eventName
 
