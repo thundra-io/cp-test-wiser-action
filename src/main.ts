@@ -3,6 +3,7 @@ import * as logger from './logger'
 import * as github from '@actions/github'
 import {Octokit} from '@octokit/action'
 import fetch from 'node-fetch'
+
 async function run(): Promise<void> {
   try {
     process.env['GITHUB_TOKEN'] = `${core.getInput('github-token')}`
@@ -16,9 +17,8 @@ async function run(): Promise<void> {
     if (eventName === 'pull_request') {
       base = github.context.payload.pull_request?.base?.sha
       head = github.context.payload.pull_request?.head?.sha
-    } else if (eventName === 'push') {
-      base = github.context.payload.before
-      head = github.context.payload.after
+    } else {
+      return
     }
 
     if (!base || !head) {
@@ -52,9 +52,24 @@ async function run(): Promise<void> {
         logger.info(`Added File: ${JSON.stringify(file)}`)
       }
     }
-    await ping()
+    const result = await ping()
+
+    const issueNumber =
+      github.context.payload.pull_request === undefined
+        ? 0
+        : github.context.payload.pull_request.number
+    logger.info(`owner: ${github.context.repo.owner}`)
+    logger.info(`repo: ${github.context.repo.repo}`)
+    logger.info(`issue_number: ${issueNumber}`)
+    logger.info(`body: ${result}`)
+    await octokit.rest.issues.createComment({
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      issue_number: issueNumber,
+      body: result
+    })
   } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message)
+    if (error instanceof Error) logger.error(`createComment error: ${error.message}`)
   }
 }
 

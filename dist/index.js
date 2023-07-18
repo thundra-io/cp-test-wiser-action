@@ -118,9 +118,8 @@ function run() {
                 base = (_b = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.base) === null || _b === void 0 ? void 0 : _b.sha;
                 head = (_d = (_c = github.context.payload.pull_request) === null || _c === void 0 ? void 0 : _c.head) === null || _d === void 0 ? void 0 : _d.sha;
             }
-            else if (eventName === 'push') {
-                base = github.context.payload.before;
-                head = github.context.payload.after;
+            else {
+                return;
             }
             if (!base || !head) {
                 logger.error('Missing data from Github.');
@@ -152,11 +151,24 @@ function run() {
                     logger.info(`Added File: ${JSON.stringify(file)}`);
                 }
             }
-            yield ping();
+            const result = yield ping();
+            const issueNumber = github.context.payload.pull_request === undefined
+                ? 0
+                : github.context.payload.pull_request.number;
+            logger.info(`owner: ${github.context.repo.owner}`);
+            logger.info(`repo: ${github.context.repo.repo}`);
+            logger.info(`issue_number: ${issueNumber}`);
+            logger.info(`body: ${result}`);
+            yield octokit.rest.issues.createComment({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                issue_number: issueNumber,
+                body: result
+            });
         }
         catch (error) {
             if (error instanceof Error)
-                core.setFailed(error.message);
+                logger.error(`createComment error: ${error.message}`);
         }
     });
 }
