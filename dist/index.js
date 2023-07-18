@@ -108,10 +108,9 @@ function run() {
             logger.info(`Initializing ...`);
             const token = `${core.getInput('github-token')}`;
             logger.info(`Token New ... ${token}`);
+            process.env['GITHUB_TOKEN'] = token;
             const eventName = github.context.eventName;
-            const octokit = new action_1.Octokit({
-                auth: token
-            });
+            const octokit = new action_1.Octokit();
             let base;
             let head;
             if (eventName === 'pull_request') {

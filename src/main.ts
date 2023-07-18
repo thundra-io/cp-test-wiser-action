@@ -7,11 +7,11 @@ async function run(): Promise<void> {
     logger.info(`Initializing ...`)
     const token = `${core.getInput('github-token')}`
     logger.info(`Token New ... ${token}`)
+    process.env['GITHUB_TOKEN'] = token
+
     const eventName = github.context.eventName
 
-    const octokit = new Octokit({
-      auth: token
-    })
+    const octokit = new Octokit()
     let base: string | undefined
     let head: string | undefined
 
