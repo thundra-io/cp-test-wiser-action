@@ -1,11 +1,12 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'CP Test Wiser'
+description: 'Action for detecting file changes according to commit'
+author: 'Yusuf Erdem yerdem@catchpoint.com'
 inputs:
-  milliseconds: # change this
+  github-token:
+    description:
+      GitHub token for GitHub API requests.
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    default: ${{ github.token }}
 runs:
   using: 'node16'
   main: 'dist/index.js'
