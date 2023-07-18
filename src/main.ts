@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import * as logger from './logger'
 import * as github from '@actions/github'
 import {Octokit} from '@octokit/action'
+import fetch from 'node-fetch'
 async function run(): Promise<void> {
   try {
     process.env['GITHUB_TOKEN'] = `${core.getInput('github-token')}`
@@ -51,8 +52,40 @@ async function run(): Promise<void> {
         logger.info(`Added File: ${JSON.stringify(file)}`)
       }
     }
+    await ping()
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
+  }
+}
+
+async function ping() {
+  try {
+    // 👇️ const response: Response
+    const response = await fetch('https://reqres.in/api/users', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+
+    if (!response.ok) {
+      throw new Error(`Error! status: ${response.status}`)
+    }
+
+    // 👇️ const result: GetUsersResponse
+    const result = await response.json()
+
+    logger.info(`result is:${JSON.stringify(result)}`)
+
+    return result
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error(`error message: ${error.message}`)
+      return error.message
+    } else {
+      logger.error(`unexpected error: ${error}`)
+      return 'An unexpected error occurred'
+    }
   }
 }
 
