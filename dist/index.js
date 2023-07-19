@@ -136,8 +136,8 @@ function run() {
                 }
             });
         }
-        function simplifyGitPatch(jsonData) {
-            const lines = jsonData.patch.split(/\r\n|\r|\n/);
+        function simplifyGitPatch(patch) {
+            const lines = patch.split(/\r\n|\r|\n/);
             let currentLine = 0;
             const lineList = [];
             for (const line of lines) {
@@ -156,7 +156,7 @@ function run() {
                     lineList.push(sourceFileLine);
                 }
             }
-            jsonData.patch = JSON.stringify(lineList);
+            return JSON.stringify(lineList);
         }
         try {
             process.env['GITHUB_TOKEN'] = `${core.getInput('github-token')}`;
