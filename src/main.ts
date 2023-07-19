@@ -37,6 +37,33 @@ async function run(): Promise<void> {
     }
   }
 
+  function simplifyGitPatch(files: any) {
+    for (const jsonData of files) {
+      const lines = jsonData.patch.split(/\r\n|\r|\n/)
+      let currentLine = 0
+
+      const lineList = []
+      for (const line of lines) {
+        if (line.includes('@@')) {
+          const numberPart = line.match('@@(.*?)@@')[1]
+          currentLine = numberPart.match('\\+(.*?),')[1]
+          continue
+        }
+
+        if (!line.startsWith('-') && !line.includes('@@')) {
+          currentLine++
+          const sourceFileLine = {
+            modified: line.startsWith('+'),
+            lineContent: line,
+            lineNumber: currentLine - 1
+          }
+          lineList.push(sourceFileLine)
+        }
+      }
+      jsonData.patch = JSON.stringify(lineList)
+    }
+  }
+
   try {
     process.env['GITHUB_TOKEN'] = `${core.getInput('github-token')}`
 
@@ -76,6 +103,7 @@ async function run(): Promise<void> {
       return
     }
     logger.info(`CompareCommit files: ${JSON.stringify(response.data.files)}`)
+    simplifyGitPatch(response.data.files)
     const result = await sendToTestWiser(response.data.files)
     const issueNumber = github.context.payload.pull_request?.number
     if (!issueNumber) {

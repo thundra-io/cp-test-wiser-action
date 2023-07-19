@@ -136,6 +136,30 @@ function run() {
                 }
             });
         }
+        function simplifyGitPatch(files) {
+            for (const jsonData of files) {
+                const lines = jsonData.patch.split(/\r\n|\r|\n/);
+                let currentLine = 0;
+                const lineList = [];
+                for (const line of lines) {
+                    if (line.includes('@@')) {
+                        const numberPart = line.match('@@(.*?)@@')[1];
+                        currentLine = numberPart.match('\\+(.*?),')[1];
+                        continue;
+                    }
+                    if (!line.startsWith('-') && !line.includes('@@')) {
+                        currentLine++;
+                        const sourceFileLine = {
+                            modified: line.startsWith('+'),
+                            lineContent: line,
+                            lineNumber: currentLine - 1
+                        };
+                        lineList.push(sourceFileLine);
+                    }
+                }
+                jsonData.patch = JSON.stringify(lineList);
+            }
+        }
         try {
             process.env['GITHUB_TOKEN'] = `${core.getInput('github-token')}`;
             const eventName = github.context.eventName;
@@ -169,6 +193,7 @@ function run() {
                 return;
             }
             logger.info(`CompareCommit files: ${JSON.stringify(response.data.files)}`);
+            simplifyGitPatch(response.data.files);
             const result = yield sendToTestWiser(response.data.files);
             const issueNumber = (_e = github.context.payload.pull_request) === null || _e === void 0 ? void 0 : _e.number;
             if (!issueNumber) {
