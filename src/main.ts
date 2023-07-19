@@ -43,25 +43,12 @@ async function run(): Promise<void> {
     if (files === undefined) {
       return
     }
-    for (const file of files) {
-      if (file.status === 'modified') {
-        logger.info(`Modified File: ${JSON.stringify(file)}`)
-      } else if (file.status === 'renamed') {
-        logger.info(`Renamed File: ${JSON.stringify(file)}`)
-      } else if (file.status === 'added') {
-        logger.info(`Added File: ${JSON.stringify(file)}`)
-      }
-    }
+    logger.info(`CompareCommit files: ${JSON.stringify(response.data.files)}`)
     const result = await ping()
-
-    const issueNumber =
-      github.context.payload.pull_request === undefined
-        ? 0
-        : github.context.payload.pull_request.number
-    logger.info(`owner: ${github.context.repo.owner}`)
-    logger.info(`repo: ${github.context.repo.repo}`)
-    logger.info(`issue_number: ${issueNumber}`)
-    logger.info(`body: ${result}`)
+    const issueNumber = github.context.payload.pull_request?.number
+    if (!issueNumber) {
+      return
+    }
     await octokit.rest.issues.createComment({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
@@ -69,7 +56,7 @@ async function run(): Promise<void> {
       body: result
     })
   } catch (error) {
-    if (error instanceof Error) logger.error(`createComment error: ${error.message}`)
+    if (error instanceof Error) logger.error(`error message: ${error.message}`)
   }
 }
 
