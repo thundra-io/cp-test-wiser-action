@@ -99,7 +99,6 @@ async function run(): Promise<void> {
     const responseFiles = JSON.stringify(response.data?.files)
     const files = JSON.parse(responseFiles)
     for (const file of files) {
-      logger.info(`file: ${JSON.stringify(file)} `)
       file.patch = simplifyGitPatch(file.patch)
     }
     logger.info(`files to send wiser: ${JSON.stringify(files)} `)

@@ -189,7 +189,6 @@ function run() {
             const responseFiles = JSON.stringify((_e = response.data) === null || _e === void 0 ? void 0 : _e.files);
             const files = JSON.parse(responseFiles);
             for (const file of files) {
-                logger.info(`file: ${JSON.stringify(file)} `);
                 file.patch = simplifyGitPatch(file.patch);
             }
             logger.info(`files to send wiser: ${JSON.stringify(files)} `);
