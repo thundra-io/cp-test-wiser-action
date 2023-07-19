@@ -37,7 +37,7 @@ async function run(): Promise<void> {
     }
   }
 
-  function simplifyGitPatch(patch: any): string {
+  function simplifyGitPatch(patch: any): unknown {
     const lines = patch.split(/\r\n|\r|\n/)
     let currentLine = 0
 
@@ -59,7 +59,7 @@ async function run(): Promise<void> {
         lineList.push(sourceFileLine)
       }
     }
-    return JSON.stringify(lineList)
+    return lineList
   }
 
   try {

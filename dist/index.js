@@ -156,7 +156,7 @@ function run() {
                     lineList.push(sourceFileLine);
                 }
             }
-            return JSON.stringify(lineList);
+            return lineList;
         }
         try {
             process.env['GITHUB_TOKEN'] = `${core.getInput('github-token')}`;
