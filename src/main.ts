@@ -37,31 +37,29 @@ async function run(): Promise<void> {
     }
   }
 
-  function simplifyGitPatch(files: any) {
-    for (const jsonData of files) {
-      const lines = jsonData.patch.split(/\r\n|\r|\n/)
-      let currentLine = 0
+  function simplifyGitPatch(jsonData: any) {
+    const lines = jsonData.patch.split(/\r\n|\r|\n/)
+    let currentLine = 0
 
-      const lineList = []
-      for (const line of lines) {
-        if (line.includes('@@')) {
-          const numberPart = line.match('@@(.*?)@@')[1]
-          currentLine = numberPart.match('\\+(.*?),')[1]
-          continue
-        }
-
-        if (!line.startsWith('-') && !line.includes('@@')) {
-          currentLine++
-          const sourceFileLine = {
-            modified: line.startsWith('+'),
-            lineContent: line,
-            lineNumber: currentLine - 1
-          }
-          lineList.push(sourceFileLine)
-        }
+    const lineList = []
+    for (const line of lines) {
+      if (line.includes('@@')) {
+        const numberPart = line.match('@@(.*?)@@')[1]
+        currentLine = numberPart.match('\\+(.*?),')[1]
+        continue
       }
-      jsonData.patch = JSON.stringify(lineList)
+
+      if (!line.startsWith('-') && !line.includes('@@')) {
+        currentLine++
+        const sourceFileLine = {
+          modified: line.startsWith('+'),
+          lineContent: line,
+          lineNumber: currentLine - 1
+        }
+        lineList.push(sourceFileLine)
+      }
     }
+    jsonData.patch = JSON.stringify(lineList)
   }
 
   try {
@@ -98,13 +96,14 @@ async function run(): Promise<void> {
       logger.error(`head commit must be ahead of base commit.`)
       return
     }
-    const files = response.data.files
-    if (files === undefined) {
-      return
+    const responseFiles = JSON.stringify(response.data?.files)
+    const files = JSON.parse(responseFiles)
+    for (const file of files) {
+      logger.info(`file: ${JSON.stringify(file)} `)
+      file.patch = simplifyGitPatch(file.patch)
     }
-    logger.info(`CompareCommit files: ${JSON.stringify(response.data.files)}`)
-    simplifyGitPatch(response.data.files)
-    const result = await sendToTestWiser(response.data.files)
+    logger.info(`files to send wiser: ${JSON.stringify(files)} `)
+    const result = await sendToTestWiser(files)
     const issueNumber = github.context.payload.pull_request?.number
     if (!issueNumber) {
       return

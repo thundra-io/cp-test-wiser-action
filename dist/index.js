@@ -106,7 +106,7 @@ const github = __importStar(__nccwpck_require__(5438));
 const action_1 = __nccwpck_require__(1231);
 const node_fetch_1 = __importDefault(__nccwpck_require__(4429));
 function run() {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f;
     return __awaiter(this, void 0, void 0, function* () {
         function sendToTestWiser(param) {
             return __awaiter(this, void 0, void 0, function* () {
@@ -136,29 +136,27 @@ function run() {
                 }
             });
         }
-        function simplifyGitPatch(files) {
-            for (const jsonData of files) {
-                const lines = jsonData.patch.split(/\r\n|\r|\n/);
-                let currentLine = 0;
-                const lineList = [];
-                for (const line of lines) {
-                    if (line.includes('@@')) {
-                        const numberPart = line.match('@@(.*?)@@')[1];
-                        currentLine = numberPart.match('\\+(.*?),')[1];
-                        continue;
-                    }
-                    if (!line.startsWith('-') && !line.includes('@@')) {
-                        currentLine++;
-                        const sourceFileLine = {
-                            modified: line.startsWith('+'),
-                            lineContent: line,
-                            lineNumber: currentLine - 1
-                        };
-                        lineList.push(sourceFileLine);
-                    }
+        function simplifyGitPatch(jsonData) {
+            const lines = jsonData.patch.split(/\r\n|\r|\n/);
+            let currentLine = 0;
+            const lineList = [];
+            for (const line of lines) {
+                if (line.includes('@@')) {
+                    const numberPart = line.match('@@(.*?)@@')[1];
+                    currentLine = numberPart.match('\\+(.*?),')[1];
+                    continue;
                 }
-                jsonData.patch = JSON.stringify(lineList);
+                if (!line.startsWith('-') && !line.includes('@@')) {
+                    currentLine++;
+                    const sourceFileLine = {
+                        modified: line.startsWith('+'),
+                        lineContent: line,
+                        lineNumber: currentLine - 1
+                    };
+                    lineList.push(sourceFileLine);
+                }
             }
+            jsonData.patch = JSON.stringify(lineList);
         }
         try {
             process.env['GITHUB_TOKEN'] = `${core.getInput('github-token')}`;
@@ -188,14 +186,15 @@ function run() {
                 logger.error(`head commit must be ahead of base commit.`);
                 return;
             }
-            const files = response.data.files;
-            if (files === undefined) {
-                return;
+            const responseFiles = JSON.stringify((_e = response.data) === null || _e === void 0 ? void 0 : _e.files);
+            const files = JSON.parse(responseFiles);
+            for (const file of files) {
+                logger.info(`file: ${JSON.stringify(file)} `);
+                file.patch = simplifyGitPatch(file.patch);
             }
-            logger.info(`CompareCommit files: ${JSON.stringify(response.data.files)}`);
-            simplifyGitPatch(response.data.files);
-            const result = yield sendToTestWiser(response.data.files);
-            const issueNumber = (_e = github.context.payload.pull_request) === null || _e === void 0 ? void 0 : _e.number;
+            logger.info(`files to send wiser: ${JSON.stringify(files)} `);
+            const result = yield sendToTestWiser(files);
+            const issueNumber = (_f = github.context.payload.pull_request) === null || _f === void 0 ? void 0 : _f.number;
             if (!issueNumber) {
                 return;
             }
