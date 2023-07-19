@@ -5,6 +5,38 @@ import {Octokit} from '@octokit/action'
 import fetch from 'node-fetch'
 
 async function run(): Promise<void> {
+  async function sendToTestWiser(param: any) {
+    try {
+      // 👇️ const response: Response
+      const response = await fetch(
+        'https://emr4yoq6ib.execute-api.us-west-2.amazonaws.com/lab/findtests',
+        {
+          method: 'POST',
+          body: JSON.stringify(param)
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error(`Error! status: ${response.status}`)
+      }
+
+      // 👇️ const result: GetUsersResponse
+      const result = await response.text()
+
+      logger.info(`result is:${result}`)
+
+      return result
+    } catch (error) {
+      if (error instanceof Error) {
+        logger.error(`error message : ${error.message}`)
+        return error.message
+      } else {
+        logger.error(`unexpected error: ${error}`)
+        return 'An unexpected error occurred'
+      }
+    }
+  }
+
   try {
     process.env['GITHUB_TOKEN'] = `${core.getInput('github-token')}`
 
@@ -44,7 +76,7 @@ async function run(): Promise<void> {
       return
     }
     logger.info(`CompareCommit files: ${JSON.stringify(response.data.files)}`)
-    const result = await ping()
+    const result = await sendToTestWiser(response.data.files)
     const issueNumber = github.context.payload.pull_request?.number
     if (!issueNumber) {
       return
@@ -57,39 +89,6 @@ async function run(): Promise<void> {
     })
   } catch (error) {
     if (error instanceof Error) logger.error(`error message: ${error.message}`)
-  }
-}
-
-async function ping() {
-  try {
-    // 👇️ const response: Response
-    const response = await fetch(
-      'http://cp-tracing-api-internal-lab.us-west-2.elasticbeanstalk.com/ping',
-      {
-        method: 'GET'
-      }
-    )
-
-    if (!response.ok) {
-      throw new Error(`Error! status: ${response.status}`)
-    }
-
-    // 👇️ const result: GetUsersResponse
-    const result = await response.text()
-
-    logger.info(`result is:${result}`)
-
-    return result
-  } catch (error) {
-    if (error instanceof Error) {
-      logger.error(`error message : ${error.message}`)
-      logger.error(`error stack : ${error.stack}`)
-      logger.error(`error  : ${error}`)
-      return error.message
-    } else {
-      logger.error(`unexpected error: ${error}`)
-      return 'An unexpected error occurred'
-    }
   }
 }
 

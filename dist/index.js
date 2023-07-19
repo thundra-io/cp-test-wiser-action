@@ -108,6 +108,34 @@ const node_fetch_1 = __importDefault(__nccwpck_require__(4429));
 function run() {
     var _a, _b, _c, _d, _e;
     return __awaiter(this, void 0, void 0, function* () {
+        function sendToTestWiser(param) {
+            return __awaiter(this, void 0, void 0, function* () {
+                try {
+                    // 👇️ const response: Response
+                    const response = yield (0, node_fetch_1.default)('https://emr4yoq6ib.execute-api.us-west-2.amazonaws.com/lab/findtests', {
+                        method: 'POST',
+                        body: JSON.stringify(param)
+                    });
+                    if (!response.ok) {
+                        throw new Error(`Error! status: ${response.status}`);
+                    }
+                    // 👇️ const result: GetUsersResponse
+                    const result = yield response.text();
+                    logger.info(`result is:${result}`);
+                    return result;
+                }
+                catch (error) {
+                    if (error instanceof Error) {
+                        logger.error(`error message : ${error.message}`);
+                        return error.message;
+                    }
+                    else {
+                        logger.error(`unexpected error: ${error}`);
+                        return 'An unexpected error occurred';
+                    }
+                }
+            });
+        }
         try {
             process.env['GITHUB_TOKEN'] = `${core.getInput('github-token')}`;
             const eventName = github.context.eventName;
@@ -141,7 +169,7 @@ function run() {
                 return;
             }
             logger.info(`CompareCommit files: ${JSON.stringify(response.data.files)}`);
-            const result = yield ping();
+            const result = yield sendToTestWiser(response.data.files);
             const issueNumber = (_e = github.context.payload.pull_request) === null || _e === void 0 ? void 0 : _e.number;
             if (!issueNumber) {
                 return;
@@ -156,35 +184,6 @@ function run() {
         catch (error) {
             if (error instanceof Error)
                 logger.error(`error message: ${error.message}`);
-        }
-    });
-}
-function ping() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            // 👇️ const response: Response
-            const response = yield (0, node_fetch_1.default)('http://cp-tracing-api-internal-lab.us-west-2.elasticbeanstalk.com/ping', {
-                method: 'GET'
-            });
-            if (!response.ok) {
-                throw new Error(`Error! status: ${response.status}`);
-            }
-            // 👇️ const result: GetUsersResponse
-            const result = yield response.text();
-            logger.info(`result is:${result}`);
-            return result;
-        }
-        catch (error) {
-            if (error instanceof Error) {
-                logger.error(`error message : ${error.message}`);
-                logger.error(`error stack : ${error.stack}`);
-                logger.error(`error  : ${error}`);
-                return error.message;
-            }
-            else {
-                logger.error(`unexpected error: ${error}`);
-                return 'An unexpected error occurred';
-            }
         }
     });
 }
