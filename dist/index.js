@@ -158,6 +158,15 @@ function run() {
             }
             return lineList;
         }
+        function createCommentSummary(result) {
+            let commentSummary = ``;
+            for (const catchpointTestId of result) {
+                commentSummary += `<details>
+        <summary>${catchpointTestId}</summary>
+        </details>`;
+            }
+            return commentSummary;
+        }
         try {
             process.env['GITHUB_TOKEN'] = `${core.getInput('github-token')}`;
             const eventName = github.context.eventName;
@@ -201,7 +210,7 @@ function run() {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
                 issue_number: issueNumber,
-                body: result
+                body: createCommentSummary(result)
             });
         }
         catch (error) {

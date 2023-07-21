@@ -62,6 +62,16 @@ async function run(): Promise<void> {
     return lineList
   }
 
+  function createCommentSummary(result: any): string {
+    let commentSummary = ``
+    for (const catchpointTestId of result) {
+      commentSummary += `<details>
+        <summary>${catchpointTestId}</summary>
+        </details>`
+    }
+    return commentSummary
+  }
+
   try {
     process.env['GITHUB_TOKEN'] = `${core.getInput('github-token')}`
 
@@ -111,7 +121,7 @@ async function run(): Promise<void> {
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
       issue_number: issueNumber,
-      body: result
+      body: createCommentSummary(result)
     })
   } catch (error) {
     if (error instanceof Error) logger.error(`error message: ${error.message}`)
