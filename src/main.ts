@@ -65,10 +65,11 @@ async function run(): Promise<void> {
   function createCommentSummary(result: any): string {
     const jsonData = JSON.parse(result)
 
-    let commentSummary = ``
+    let commentSummary = `##Catchpoint tests that should run according to source code modifications<br/> `
     for (const catchpointTestId of jsonData) {
       commentSummary += `<details>
         <summary>${catchpointTestId}</summary>
+        Catchpoint Test Id
         </details>`
     }
     return commentSummary
