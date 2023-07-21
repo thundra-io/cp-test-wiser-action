@@ -160,8 +160,7 @@ function run() {
         }
         function createCommentSummary(result) {
             const jsonData = JSON.parse(result);
-            let commentSummary = `### Catchpoint tests that should be run according to the source code modifications\\
-     `;
+            let commentSummary = `**Catchpoint tests that should be run according to the source code modifications**`;
             for (const catchpointTestId of jsonData) {
                 commentSummary += `<details>
         <summary>${catchpointTestId}</summary>
