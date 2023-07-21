@@ -159,8 +159,9 @@ function run() {
             return lineList;
         }
         function createCommentSummary(result) {
+            const jsonData = JSON.parse(result);
             let commentSummary = ``;
-            for (const catchpointTestId of result) {
+            for (const catchpointTestId of jsonData) {
                 commentSummary += `<details>
         <summary>${catchpointTestId}</summary>
         </details>`;

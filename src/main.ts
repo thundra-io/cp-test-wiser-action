@@ -63,8 +63,10 @@ async function run(): Promise<void> {
   }
 
   function createCommentSummary(result: any): string {
+    const jsonData = JSON.parse(result)
+
     let commentSummary = ``
-    for (const catchpointTestId of result) {
+    for (const catchpointTestId of jsonData) {
       commentSummary += `<details>
         <summary>${catchpointTestId}</summary>
         </details>`
