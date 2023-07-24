@@ -7,7 +7,6 @@ import fetch from 'node-fetch'
 async function run(): Promise<void> {
   async function sendToTestWiser(param: any) {
     try {
-
       // 👇️ const response: Response
       const response = await fetch(
         'https://q0vaxdyfh4.execute-api.us-west-2.amazonaws.com/lab/findtests',
@@ -72,6 +71,7 @@ async function run(): Promise<void> {
       commentSummary += `\n`
       commentSummary += `${catchpointTest.mermaidFlowChart}`
       commentSummary += '```'
+      commentSummary += `${catchpointTest.traceGraphExplanation}`
     }
     return commentSummary
   }

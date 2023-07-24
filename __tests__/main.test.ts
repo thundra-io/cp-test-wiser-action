@@ -1,5 +1,5 @@
 import {test} from '@jest/globals'
 
 test('test runs', () => {
-  console.log("tests")
+  console.log('tests')
 })
