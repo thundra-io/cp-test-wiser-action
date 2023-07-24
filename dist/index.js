@@ -111,7 +111,6 @@ function run() {
         function sendToTestWiser(param) {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
-                    logger.info(`post findtests`);
                     // 👇️ const response: Response
                     const response = yield (0, node_fetch_1.default)('https://q0vaxdyfh4.execute-api.us-west-2.amazonaws.com/lab/findtests', {
                         method: 'POST',
@@ -122,7 +121,6 @@ function run() {
                     }
                     // 👇️ const result: GetUsersResponse
                     const result = yield response.text();
-                    logger.info(`result is:${result}`);
                     return result;
                 }
                 catch (error) {
@@ -161,12 +159,10 @@ function run() {
         }
         function createCommentSummary(result) {
             const jsonData = JSON.parse(result);
-            logger.info(`jsonData: ${jsonData}`);
-            let commentSummary = `# Catchpoint tests that should be run according to the source code modifications`;
+            let commentSummary = `## Catchpoint tests that should be run according to the source code modifications`;
             for (const catchpointTest of jsonData) {
-                logger.info(`catchpointTest: ${jsonData}`);
                 commentSummary += `\n`;
-                commentSummary += `# Catchpoint Test Id: ${catchpointTest.testId}`;
+                commentSummary += `### Catchpoint Test Id: ${catchpointTest.testId}`;
                 commentSummary += `\n`;
                 commentSummary += '```mermaid';
                 commentSummary += `\n`;
