@@ -111,6 +111,7 @@ function run() {
         function sendToTestWiser(param) {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
+                    logger.info(`post findtests`);
                     // 👇️ const response: Response
                     const response = yield (0, node_fetch_1.default)('https://q0vaxdyfh4.execute-api.us-west-2.amazonaws.com/lab/findtests', {
                         method: 'POST',
@@ -207,7 +208,6 @@ function run() {
             for (const file of files) {
                 file.patch = simplifyGitPatch(file.patch);
             }
-            logger.info(`files to send wiser: ${JSON.stringify(files)} `);
             const result = yield sendToTestWiser(files);
             const issueNumber = (_f = github.context.payload.pull_request) === null || _f === void 0 ? void 0 : _f.number;
             if (!issueNumber) {

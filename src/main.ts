@@ -7,6 +7,8 @@ import fetch from 'node-fetch'
 async function run(): Promise<void> {
   async function sendToTestWiser(param: any) {
     try {
+      logger.info(`post findtests`)
+
       // 👇️ const response: Response
       const response = await fetch(
         'https://q0vaxdyfh4.execute-api.us-west-2.amazonaws.com/lab/findtests',
@@ -119,7 +121,6 @@ async function run(): Promise<void> {
     for (const file of files) {
       file.patch = simplifyGitPatch(file.patch)
     }
-    logger.info(`files to send wiser: ${JSON.stringify(files)} `)
     const result = await sendToTestWiser(files)
     const issueNumber = github.context.payload.pull_request?.number
     if (!issueNumber) {
