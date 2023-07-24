@@ -72,7 +72,7 @@ async function run(): Promise<void> {
       logger.info(`catchpointTest: ${jsonData}`)
 
       commentSummary += `\n`
-      commentSummary += `#${catchpointTest.testId}`
+      commentSummary += `# Catchpoint Test Id: ${catchpointTest.testId}`
       commentSummary += `\n`
       commentSummary += '```mermaid'
       commentSummary += `\n`

@@ -166,7 +166,7 @@ function run() {
             for (const catchpointTest of jsonData) {
                 logger.info(`catchpointTest: ${jsonData}`);
                 commentSummary += `\n`;
-                commentSummary += `#${catchpointTest.testId}`;
+                commentSummary += `# Catchpoint Test Id: ${catchpointTest.testId}`;
                 commentSummary += `\n`;
                 commentSummary += '```mermaid';
                 commentSummary += `\n`;
