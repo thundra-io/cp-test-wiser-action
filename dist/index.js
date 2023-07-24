@@ -112,7 +112,7 @@ function run() {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
                     // 👇️ const response: Response
-                    const response = yield (0, node_fetch_1.default)('https://emr4yoq6ib.execute-api.us-west-2.amazonaws.com/lab/findtests', {
+                    const response = yield (0, node_fetch_1.default)('https://q0vaxdyfh4.execute-api.us-west-2.amazonaws.com/lab/findtests', {
                         method: 'POST',
                         body: JSON.stringify(param)
                     });
@@ -160,12 +160,15 @@ function run() {
         }
         function createCommentSummary(result) {
             const jsonData = JSON.parse(result);
-            let commentSummary = `**Catchpoint tests that should be run according to the source code modifications**`;
-            for (const catchpointTestId of jsonData) {
-                commentSummary += `<details>
-        <summary>${catchpointTestId}</summary>
-        Catchpoint Test Id
-        </details>`;
+            let commentSummary = `## Catchpoint tests that should be run according to the source code modifications`;
+            for (const catchpointTest of jsonData) {
+                commentSummary += `\n`;
+                commentSummary += `${catchpointTest.testId}`;
+                commentSummary += `\n`;
+                commentSummary += '```mermaid';
+                commentSummary += `\n`;
+                commentSummary += `${catchpointTest.mermaidFlowChart}`;
+                commentSummary += '```';
             }
             return commentSummary;
         }
