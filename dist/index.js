@@ -168,6 +168,7 @@ function run() {
                 commentSummary += `\n`;
                 commentSummary += `${catchpointTest.mermaidFlowChart}`;
                 commentSummary += '```';
+                commentSummary += `\n`;
                 commentSummary += `${catchpointTest.traceGraphExplanation}`;
             }
             return commentSummary;

@@ -71,6 +71,7 @@ async function run(): Promise<void> {
       commentSummary += `\n`
       commentSummary += `${catchpointTest.mermaidFlowChart}`
       commentSummary += '```'
+      commentSummary += `\n`
       commentSummary += `${catchpointTest.traceGraphExplanation}`
     }
     return commentSummary
