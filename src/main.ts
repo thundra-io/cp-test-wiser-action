@@ -27,7 +27,7 @@ async function run(): Promise<void> {
       return result
     } catch (error) {
       if (error instanceof Error) {
-        logger.error(`error message : ${error.message}`)
+        logger.error(` sendToTestWiser error message : ${error.message}`)
         return error.message
       } else {
         logger.error(`unexpected error: ${error}`)
@@ -63,7 +63,7 @@ async function run(): Promise<void> {
 
   function createCommentSummary(result: any): string {
     const jsonData = JSON.parse(result)
-    let commentSummary = `## <img margin-bottom="-10px" width="40" height="40" src="https://media.licdn.com/dms/image/C560BAQEvniJjrPUgow/company-logo_200_200/0/1668188077513?e=1698278400&v=beta&t=qSx9iFeU2QI2RfDWdzFThflx5OnsiMLIf2fzzDSBlzs">  Catchpoint tests that should be run according to the source code modifications`
+    let commentSummary = `## <img style="max-width: 100%;margin-bottom: -10px;" width="40" height="40" src="https://media.licdn.com/dms/image/C560BAQEvniJjrPUgow/company-logo_200_200/0/1668188077513?e=1698278400&v=beta&t=qSx9iFeU2QI2RfDWdzFThflx5OnsiMLIf2fzzDSBlzs">  Catchpoint tests that should be run according to the source code modifications`
     for (const catchpointTest of jsonData) {
       commentSummary += `\n`
       commentSummary += `### Catchpoint Test Id: ${catchpointTest.testId}`
@@ -127,7 +127,7 @@ async function run(): Promise<void> {
       body: createCommentSummary(result)
     })
   } catch (error) {
-    if (error instanceof Error) logger.error(`error message: ${error.message}`)
+    if (error instanceof Error) logger.error(`general error: ${error.message}`)
   }
 }
 
