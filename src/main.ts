@@ -9,7 +9,7 @@ async function run(): Promise<void> {
     try {
       // 👇️ const response: Response
       const response = await fetch(
-        'https://q0vaxdyfh4.execute-api.us-west-2.amazonaws.com/lab/findtests',
+        'https://4kar344req4lry6ptdp53tqly40sbxmw.lambda-url.us-west-2.on.aws/',
         {
           method: 'POST',
           body: JSON.stringify(param)

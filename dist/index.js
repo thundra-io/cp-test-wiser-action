@@ -112,7 +112,7 @@ function run() {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
                     // 👇️ const response: Response
-                    const response = yield (0, node_fetch_1.default)('https://q0vaxdyfh4.execute-api.us-west-2.amazonaws.com/lab/findtests', {
+                    const response = yield (0, node_fetch_1.default)('https://4kar344req4lry6ptdp53tqly40sbxmw.lambda-url.us-west-2.on.aws/', {
                         method: 'POST',
                         body: JSON.stringify(param)
                     });
