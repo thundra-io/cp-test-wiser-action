@@ -163,6 +163,9 @@ function run() {
             for (const catchpointTest of jsonData) {
                 commentSummary += `\n`;
                 commentSummary += `### Catchpoint Test Id: ${catchpointTest.testId}`;
+                if (catchpointTest.testId === '0' || catchpointTest.testId === 0) {
+                    commentSummary += ` (Instant Test)`;
+                }
                 commentSummary += `\n`;
                 commentSummary += '```mermaid';
                 commentSummary += `\n`;
